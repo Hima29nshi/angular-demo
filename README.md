@@ -1,59 +1,349 @@
-# NewProject
+# 📘 Angular Application Documentation
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.5.
+## 🚀 1. Project Setup & Installation
 
-## Development server
+### Install Node.js
 
-To start a local development server, run:
+* Download and install Node.js
+
+```bash
+node -v
+npm -v
+```
+
+---
+
+### Install Angular CLI
+
+```bash
+npm install -g @angular/cli
+```
+
+Verify:
+
+```bash
+ng version
+```
+
+---
+
+### Create New Angular Project
+
+```bash
+ng new my-angular-app
+cd my-angular-app
+```
+
+Options:
+
+* Routing: Yes
+* Styles: CSS / SCSS
+
+---
+
+### Run the Application
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Open: [http://localhost:4200](http://localhost:4200)
 
-## Code scaffolding
+---
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## 📦 2. Project Structure
 
-```bash
-ng generate component component-name
+```
+src/
+ ├── app/
+ │   ├── components/
+ │   ├── services/
+ │   ├── directives/
+ │   ├── pipes/
+ │   ├── app-routing.module.ts
+ │   ├── app.component.ts
+ │   └── app.module.ts
+ └── main.ts
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+---
+
+# 🧩 3. Components
+
+### Generate Component
 
 ```bash
-ng generate --help
+ng generate component components/header
+# OR
+ng g c components/header
 ```
 
-## Building
+### Component Structure
 
-To build the project run:
+* `.ts` → Logic
+* `.html` → Template
+* `.css/scss` → Styling
+
+### Example Component
+
+```ts
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-header',
+  template: `<h1>{{ title }}</h1>`,
+})
+export class HeaderComponent {
+  title = 'My Angular App';
+}
+```
+
+---
+
+# 🔗 4. Data Binding
+
+### 1. Interpolation
+
+```html
+<h1>{{ title }}</h1>
+```
+
+### 2. Property Binding
+
+```html
+<img [src]="imageUrl">
+```
+
+### 3. Event Binding
+
+```html
+<button (click)="onClick()">Click</button>
+```
+
+### 4. Two-way Binding
+
+```html
+<input [(ngModel)]="name">
+```
+
+Import:
+
+```ts
+import { FormsModule } from '@angular/forms';
+```
+
+---
+
+# 🧭 5. Routing
+
+### Generate Routing Module
+
+```bash
+ng generate module app-routing --flat --module=app
+```
+
+### Define Routes
+
+```ts
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { HomeComponent } from './components/home/home.component';
+import { AboutComponent } from './components/about/about.component';
+
+const routes: Routes = [
+  { path: '', component: HomeComponent },
+  { path: 'todos', component: TodosComponent }
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule {}
+```
+
+### Use in HTML
+
+```html
+<a routerLink="/">Home</a>
+<a routerLink="/todos">Todos</a>
+
+<router-outlet></router-outlet>
+```
+
+---
+
+# 🔌 6. Services & API Calls
+
+### Generate Service
+
+```bash
+ng generate service services/todos
+# OR
+ng g s services/todos
+```
+
+### Example Service
+
+```ts
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ApiService {
+
+  constructor(private http: HttpClient) {}
+
+  getUsers() {
+    return this.http.get('https://jsonplaceholder.typicode.com/todos');
+  }
+}
+```
+
+### Import HttpClientModule
+
+```ts
+import { HttpClientModule } from '@angular/common/http';
+
+@NgModule({
+  imports: [HttpClientModule]
+})
+export class AppModule {}
+```
+
+### Use Service in Component
+
+```ts
+constructor(private api: ApiService) {}
+
+ngOnInit() {
+  this.api.loadTodos().subscribe(data => {
+    console.log(data);
+  });
+}
+```
+
+---
+
+# 🔄 7. Pipes
+
+### Generate Pipe
+
+```bash
+ng generate pipe pipes/custom
+# OR
+ng g p pipes/custom
+```
+
+### Example Pipe
+
+```ts
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'uppercaseCustom'
+})
+export class CustomPipe implements PipeTransform {
+  transform(value: string): string {
+    return value.toUpperCase();
+  }
+}
+```
+
+### Usage
+
+```html
+<p>{{ name | uppercaseCustom }}</p>
+```
+
+---
+
+# 🧠 8. Directives
+
+### Generate Directive
+
+```bash
+ng generate directive directives/highlight
+# OR
+ng g d directives/highlight
+```
+
+### Example Directive
+
+```ts
+import { Directive, ElementRef, HostListener } from '@angular/core';
+
+@Directive({
+  selector: '[appHighlight]'
+})
+export class HighlightDirective {
+
+  constructor(private el: ElementRef) {}
+
+  @HostListener('mouseenter') onMouseEnter() {
+    this.el.nativeElement.style.backgroundColor = 'yellow';
+  }
+
+  @HostListener('mouseleave') onMouseLeave() {
+    this.el.nativeElement.style.backgroundColor = null;
+  }
+}
+```
+
+### Usage
+
+```html
+<p appHighlight>Hover over me</p>
+```
+
+---
+
+# 🛠️ 9. Common Angular CLI Commands
+
+```bash
+ng g c component-name
+ng g s service-name
+ng g p pipe-name
+ng g d directive-name
+ng g m module-name
+```
+
+### Build Project
 
 ```bash
 ng build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Production build:
 
-## Running unit tests
+```bash
+ng build --configuration production
+```
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+### Run Tests
 
 ```bash
 ng test
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+### Lint
 
 ```bash
-ng e2e
+ng lint
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+### Fix Lint Issues
 
-## Additional Resources
+```bash
+ng lint --fix
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+### Update Angular
+
+```bash
+ng update @angular/core @angular/cli
+```
+
+---
