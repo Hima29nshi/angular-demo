@@ -1,5 +1,3 @@
-# 📘 Angular Application Documentation
-
 ## 🚀 1. Project Setup & Installation
 
 ### Install Node.js
